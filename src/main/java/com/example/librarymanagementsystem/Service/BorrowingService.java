@@ -50,7 +50,7 @@ public class BorrowingService {
         }
     }
 
-    private BorrowingRecordDTO convertToDTO(BorrowingRecord record) {
+    public BorrowingRecordDTO convertToDTO(BorrowingRecord record) {
         return new BorrowingRecordDTO(
                 record.getId(),
                 record.getBook().getId(),
@@ -60,7 +60,7 @@ public class BorrowingService {
         );
     }
 
-    private BorrowingRecord convertToEntity(BorrowingRecordDTO dto) {
+    public BorrowingRecord convertToEntity(BorrowingRecordDTO dto) {
         BorrowingRecord record = new BorrowingRecord();
 
         record.setBook(
