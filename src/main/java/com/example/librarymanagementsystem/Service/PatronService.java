@@ -36,8 +36,9 @@ public class PatronService {
     @Cacheable(value = "patrons", key = "#id")
     public Optional<PatronDTO> findPatronById(Long id) {
         log.info("Fetching patron with id: {}", id);
-        return patronRepository.findById(id)
-                .map(this::convertToDTO);
+        return Optional.ofNullable(patronRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new PatronNotFoundException("Patron not found with id: " + id)));
     }
 
     @Transactional
@@ -53,11 +54,9 @@ public class PatronService {
     @CachePut(value = "patrons", key = "#id")
     public Optional<PatronDTO> updatePatron(Long id, PatronDTO patronDTO) {
         log.info("Updating patron with id: {}", id);
-        return Optional.ofNullable(patronRepository.findById(id).map(patron -> {
-            patron.setName(patronDTO.getName());
-            patron.setContactInformation(patronDTO.getContactInformation());
-            return convertToDTO(patronRepository.save(patron));
-        }).orElseThrow(() -> new PatronNotFoundException("Patron not found with id: " + id)));
+        return Optional.ofNullable(patronRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new PatronNotFoundException("Patron not found with id: " + id)));
     }
 
     @Transactional

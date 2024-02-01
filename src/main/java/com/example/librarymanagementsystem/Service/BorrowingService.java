@@ -2,13 +2,16 @@ package com.example.librarymanagementsystem.Service;
 
 import com.example.librarymanagementsystem.DTO.BorrowingRecordDTO;
 import com.example.librarymanagementsystem.Entity.BorrowingRecord;
+import com.example.librarymanagementsystem.Exception.BookException;
 import com.example.librarymanagementsystem.Exception.BookNotFoundException;
 import com.example.librarymanagementsystem.Exception.BorrowingRecordNotFoundException;
 import com.example.librarymanagementsystem.Exception.PatronNotFoundException;
 import com.example.librarymanagementsystem.Repository.BorrowingRecordRepository;
 import com.example.librarymanagementsystem.Repository.BookRepository;
 import com.example.librarymanagementsystem.Repository.PatronRepository;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

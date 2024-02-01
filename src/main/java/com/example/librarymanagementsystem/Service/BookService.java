@@ -36,8 +36,9 @@ public class BookService {
     @Cacheable(value = "books", key = "#id")
     public Optional<BookDTO> findById(Long id) {
         log.info("Fetching book with id: {}", id);
-        return bookRepository.findById(id)
-                .map(this::convertToDTO);
+        return Optional.ofNullable(bookRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id)));
     }
 
     @Transactional
