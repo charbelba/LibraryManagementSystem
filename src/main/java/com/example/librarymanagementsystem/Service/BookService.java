@@ -47,13 +47,13 @@ public class BookService {
     @Transactional
     public Optional<BookDTO> update(Long id, BookDTO bookDTO) {
         log.info("Updating book with id: {}", id);
-        return bookRepository.findById(id).map(book -> {
+        return Optional.ofNullable(bookRepository.findById(id).map(book -> {
             book.setTitle(bookDTO.getTitle());
             book.setAuthor(bookDTO.getAuthor());
             book.setPublicationYear(bookDTO.getPublicationYear());
             book.setIsbn(bookDTO.getIsbn());
             return convertToDTO(bookRepository.save(book));
-        }).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
+        }).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id)));
     }
 
     @Transactional
