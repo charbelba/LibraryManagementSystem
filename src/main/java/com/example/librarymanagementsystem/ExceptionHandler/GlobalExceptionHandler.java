@@ -2,6 +2,7 @@ package com.example.librarymanagementsystem.ExceptionHandler;
 
 
 import com.example.librarymanagementsystem.Exception.ApiException;
+import com.example.librarymanagementsystem.Exception.ApiRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Object> handleException(Exception ex) {
+    public ResponseEntity<Object> handleException(ApiRequestException ex) {
         ApiException exception = new ApiException(
                 ex.getMessage(),
                 ex.getCause(),

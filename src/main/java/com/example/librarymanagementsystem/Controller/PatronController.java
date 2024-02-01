@@ -15,7 +15,6 @@ public class PatronController {
     @Autowired
     private PatronService patronService;
 
-
     @GetMapping
     public ResponseEntity<List<PatronDTO>> getAllPatrons() {
         return ResponseEntity.ok(patronService.findAllPatrons());
