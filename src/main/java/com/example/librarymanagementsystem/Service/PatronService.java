@@ -6,6 +6,9 @@ import com.example.librarymanagementsystem.Exception.PatronNotFoundException;
 import com.example.librarymanagementsystem.Repository.PatronRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -21,6 +24,7 @@ public class PatronService {
     private PatronRepository patronRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable("patrons")
     public List<PatronDTO> findAllPatrons() {
         log.info("Fetching all patrons");
         return patronRepository.findAll().stream()
@@ -29,16 +33,15 @@ public class PatronService {
     }
 
     @Transactional(readOnly = true)
-
+    @Cacheable(value = "patrons", key = "#id")
     public Optional<PatronDTO> findPatronById(Long id) {
         log.info("Fetching patron with id: {}", id);
-        return Optional.ofNullable(patronRepository.findById(id)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new PatronNotFoundException("Patron not found with id: " + id)));
+        return patronRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
     @Transactional
-
+    @CachePut(value = "patrons", key = "#result.id")
     public PatronDTO addPatron(PatronDTO patronDTO) {
         Patron patron = convertToEntity(patronDTO);
         log.info("Adding new patron: {}", patronDTO);
@@ -47,7 +50,7 @@ public class PatronService {
     }
 
     @Transactional
-
+    @CachePut(value = "patrons", key = "#id")
     public Optional<PatronDTO> updatePatron(Long id, PatronDTO patronDTO) {
         log.info("Updating patron with id: {}", id);
         return Optional.ofNullable(patronRepository.findById(id).map(patron -> {
@@ -58,7 +61,7 @@ public class PatronService {
     }
 
     @Transactional
-
+    @CacheEvict(value = "patrons", key = "#id")
     public boolean deletePatron(Long id) {
         log.info("Deleting patron with id: {}", id);
         if (patronRepository.existsById(id)) {

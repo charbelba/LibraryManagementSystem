@@ -6,6 +6,9 @@ import com.example.librarymanagementsystem.Exception.BookNotFoundException;
 import com.example.librarymanagementsystem.Repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ public class BookService {
     private BookRepository bookRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable("books")
     public List<BookDTO> findAll() {
         log.info("Fetching all books");
         return bookRepository.findAll().stream()
@@ -29,14 +33,15 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "books", key = "#id")
     public Optional<BookDTO> findById(Long id) {
         log.info("Fetching book with id: {}", id);
-        return Optional.ofNullable(bookRepository.findById(id)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id)));
+        return bookRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
     @Transactional
+    @CachePut(value = "books", key = "#result.id")
     public BookDTO save(BookDTO bookDTO) {
         Book book = convertToEntity(bookDTO);
         log.info("Saving new book: {}", bookDTO);
@@ -45,6 +50,7 @@ public class BookService {
     }
 
     @Transactional
+    @CacheEvict(value = "books", key = "#id")
     public Optional<BookDTO> update(Long id, BookDTO bookDTO) {
         log.info("Updating book with id: {}", id);
         return Optional.ofNullable(bookRepository.findById(id).map(book -> {
@@ -57,6 +63,7 @@ public class BookService {
     }
 
     @Transactional
+    @CacheEvict(value = "books", key = "#id")
     public boolean delete(Long id) {
         log.info("Deleting book with id: {}", id);
         if (bookRepository.existsById(id)) {
