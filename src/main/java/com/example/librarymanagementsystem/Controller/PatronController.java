@@ -4,6 +4,7 @@ import com.example.librarymanagementsystem.Service.PatronService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,13 @@ public class PatronController {
     }
 
     @PostMapping
-    public ResponseEntity<PatronDTO> addPatron(@RequestBody PatronDTO patronDTO) {
+    public ResponseEntity<PatronDTO> addPatron(@Validated  @RequestBody PatronDTO patronDTO) {
         PatronDTO savedPatron = patronService.addPatron(patronDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPatron);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatronDTO> updatePatron(@PathVariable Long id, @RequestBody PatronDTO patronDTO) {
+    public ResponseEntity<PatronDTO> updatePatron(@PathVariable Long id,@Validated @RequestBody PatronDTO patronDTO) {
         return patronService.updatePatron(id, patronDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -6,6 +6,7 @@ import com.example.librarymanagementsystem.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,12 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO> addBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> addBook(@Validated @RequestBody BookDTO bookDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.save(bookDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id,@Validated @RequestBody BookDTO bookDTO) {
         return bookService.update(id, bookDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
