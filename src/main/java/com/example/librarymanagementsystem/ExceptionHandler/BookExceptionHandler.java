@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.ExceptionHandler;
 
+import com.example.librarymanagementsystem.Exception.BookAlreadyBorrowedException;
 import com.example.librarymanagementsystem.Exception.BookException;
 import com.example.librarymanagementsystem.Exception.BookNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -16,5 +17,12 @@ public class BookExceptionHandler {
     public ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException ex) {
         BookException exception = new BookException(ex.getMessage(),ex.getCause(),HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(exception,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BookAlreadyBorrowedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handleBookAlreadyBorrowedException(BookAlreadyBorrowedException ex) {
+        BookException exception = new BookException(ex.getMessage(),ex.getCause(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception,HttpStatus.CONFLICT);
     }
 }

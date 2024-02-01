@@ -22,5 +22,13 @@ public class Book {
     private String author;
     private int publicationYear;
     private String isbn;
+    private boolean isBorrowed = false;
 
+    public Book(Long id, String title, String author, int publicationYear, String isbn) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.publicationYear = publicationYear;
+        this.isbn = isbn;
+    }
 }
