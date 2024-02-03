@@ -3,6 +3,8 @@ package com.example.librarymanagementsystem.Controller;
 
 import com.example.librarymanagementsystem.DTO.BookDTO;
 import com.example.librarymanagementsystem.Service.BookService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,26 +26,26 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookDTO> getBookById(@PathVariable @NotNull Long id) {
         return bookService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO> addBook(@Validated @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> addBook(@RequestBody @Valid BookDTO bookDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.save(bookDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id,@Validated @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBook(@PathVariable @NotNull Long id,@Valid @RequestBody BookDTO bookDTO) {
         return bookService.update(id, bookDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable @NotNull Long id) {
         if (bookService.delete(id)) {
             return ResponseEntity.ok().build();
         } else {
