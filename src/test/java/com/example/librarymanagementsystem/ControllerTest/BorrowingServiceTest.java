@@ -37,7 +37,7 @@ public class BorrowingServiceTest {
 
     @Test
     public void borrowBook_validBorrowingRecordDTO_shouldReturnBorrowingRecordDTO() {
-        BorrowingRecordDTO borrowingRecordDTO = new BorrowingRecordDTO(null, 1L, 1L, LocalDate.now(), null);
+        BorrowingRecordDTO borrowingRecordDTO = new BorrowingRecordDTO(1L, 1L, LocalDate.now(), null);
         BorrowingRecord savedRecord = new BorrowingRecord(1L, new Book(), new Patron(), LocalDate.now(), null);
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(new Book()));
